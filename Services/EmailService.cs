@@ -18,24 +18,24 @@ namespace CotadorAcoes.Services
         {
             try
             {
-                var smtpClient = new SmtpClient(_config.Smtp.Host)
+                SmtpClient smtpClient = new SmtpClient(_config.Smtp.Host)
                 {
                     Port = _config.Smtp.Port,
-                    Credentials = new NetworkCredential(_config.Smtp.Username, _config.Smtp.Password),
+                    Credentials = new NetworkCredential(_config.Smtp.Usuario, _config.Smtp.Senha),
                     EnableSsl = true,
                     DeliveryMethod = SmtpDeliveryMethod.Network,
                     UseDefaultCredentials = false
                 };
 
-                var mailMessage = new MailMessage
+                MailMessage mailMessage = new MailMessage
                 {
-                    From = new MailAddress(_config.Smtp.Username),
+                    From = new MailAddress(_config.Smtp.Usuario),
                     Subject = subject,
                     Body = body,
                     IsBodyHtml = true,
                 };
 
-                mailMessage.To.Add(_config.Email.To);
+                mailMessage.To.Add(_config.Email.Destinatario);
 
                 smtpClient.Send(mailMessage);
 
