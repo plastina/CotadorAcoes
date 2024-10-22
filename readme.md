@@ -3,11 +3,14 @@ O CotadorAcoes é uma aplicação de monitoramento de ações da Bolsa de Valores Bra
 
 ## Pré-requisitos
 .NET 6.0 SDK ou superior
+
 Conta no Gmail ou outro serviço SMTP configurado para enviar e-mails
+
 Chave da API da Brapi (ou outra API que você estiver usando para buscar cotações)
 
 ## Configuração do Projeto
 Instalar dependências: Certifique-se de que todas as dependências estão instaladas corretamente, especialmente o Microsoft.Extensions.DependencyInjection para a injeção de dependências.
+
 Configurar o arquivo appsettings.json: No diretório Configuration, você deve criar um arquivo appsettings.json com a estrutura abaixo:
 {
   "Smtp": {
@@ -31,7 +34,9 @@ Compilar e rodar: Para compilar e rodar o projeto, navegue até o diretório raiz 
 dotnet run <TICKER> <PREÇO_DE_VENDA> <PREÇO_DE_COMPRA>
 
 TICKER: O símbolo do ativo que você deseja monitorar (ex: VALE3, PETR4, etc.).
+
 PREÇO_DE_VENDA: O preço de venda desejado para gerar o alerta.
+
 PREÇO_DE_COMPRA: O preço de compra desejado para gerar o alerta.
 
 Exemplo:
