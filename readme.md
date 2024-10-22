@@ -36,4 +36,3 @@ PREÇO_DE_COMPRA: O preço de compra desejado para gerar o alerta.
 
 Exemplo:
 dotnet run VALE3 80 60
-dotnet run ITUB4 30 25
