@@ -26,7 +26,7 @@ Configurar o arquivo appsettings.json: No diretório Configuration, você deve cri
   }
 }
 
-##Como Rodar a Aplicação
+## Como Rodar a Aplicação
 Compilar e rodar: Para compilar e rodar o projeto, navegue até o diretório raiz do projeto e execute o seguinte comando no terminal:
 dotnet run <TICKER> <PREÇO_DE_VENDA> <PREÇO_DE_COMPRA>
 
