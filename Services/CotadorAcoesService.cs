@@ -14,13 +14,13 @@ namespace CotadorAcoes.Services
 
         public CotadorAcoesService(HttpClient httpClient, AppSettings config)
         {
-            if (config == null)
-            {
-                throw new ArgumentNullException(nameof(config), "Configuração não pode ser nula.");
-            }
-
             _httpClient = httpClient ?? throw new ArgumentNullException(nameof(httpClient));
-            _config = config;
+            _config = config ?? throw new ArgumentNullException(nameof(config), "Configuração não pode ser nula.");
+
+            if (_config.Api == null || string.IsNullOrEmpty(_config.Api.UrlPadrao) || string.IsNullOrEmpty(_config.Api.ApiKey))
+            {
+                throw new ArgumentException("Configuração da API está ausente ou incompleta.");
+            }
         }
 
         public async Task<decimal> GetStockQuoteAsync(string ticker)
@@ -39,15 +39,16 @@ namespace CotadorAcoes.Services
 
             HttpResponseMessage response = await _httpClient.GetAsync(new Uri(url));
 
+            string jsonResponse = await response.Content.ReadAsStringAsync();
+
             if (!response.IsSuccessStatusCode)
             {
                 throw new Exception($"Erro ao obter a cotação: {response.StatusCode} ({response.ReasonPhrase})");
             }
 
-            string jsonResponse = await response.Content.ReadAsStringAsync();
             CotadorAcoesResponse cotadorAcoesResponse = JsonConvert.DeserializeObject<CotadorAcoesResponse>(jsonResponse);
 
-            if (cotadorAcoesResponse.Results != null && cotadorAcoesResponse.Results.Length > 0)
+            if (cotadorAcoesResponse?.Results != null && cotadorAcoesResponse.Results.Length > 0)
             {
                 return cotadorAcoesResponse.Results[0].RegularMarketPrice;
             }
