@@ -24,7 +24,7 @@ namespace CotadorAcoes.Application.Services
             }
         }
 
-        public async Task<decimal> GetStockQuoteAsync(string ticker)
+        public async Task<decimal> ObterCotacaoAsync(string ticker)
         {
             if (_config.Api == null || string.IsNullOrEmpty(_config.Api.UrlPadrao) || string.IsNullOrEmpty(_config.Api.ApiKey))
             {

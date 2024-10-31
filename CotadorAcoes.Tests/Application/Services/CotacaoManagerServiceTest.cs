@@ -21,7 +21,7 @@ namespace CotadorAcoes.Tests
         }
 
         [Fact]
-        public async Task MonitorarCotacaoAsync_ShouldSendSellAlert_WhenCotacaoExceedsPrecoVenda()
+        public async Task MonitorarCotacaoAsync_EnviarAlertaVenda_CotacaoExcederPrecoVenda()
         {
             string ticker = "TEST";
             decimal precoVendaReferencia = 100m;
@@ -29,19 +29,19 @@ namespace CotadorAcoes.Tests
             decimal cotacaoAtual = 110m;
 
             _cotadorAcoesServiceMock
-                .Setup(service => service.GetStockQuoteAsync(ticker))
+                .Setup(service => service.ObterCotacaoAsync(ticker))
                 .ReturnsAsync(cotacaoAtual);
 
             await _cotacaoManagerService.MonitorarCotacaoAsync(ticker, precoVendaReferencia, precoCompraReferencia);
 
-            _emailServiceMock.Verify(emailService => emailService.SendAlertEmail(
+            _emailServiceMock.Verify(emailService => emailService.EnviarEmailAlerta(
                 It.Is<string>(subject => subject.Contains("venda")),
                 It.Is<string>(body => body.Contains("venda"))
             ), Times.Once);
         }
 
         [Fact]
-        public async Task MonitorarCotacaoAsync_ShouldSendBuyAlert_WhenCotacaoFallsBelowPrecoCompra()
+        public async Task MonitorarCotacaoAsync_EnviarAlertaCompra_CotacaoAbaixoPrecoCompra()
         {
             string ticker = "TEST";
             decimal precoVendaReferencia = 100m;
@@ -49,19 +49,19 @@ namespace CotadorAcoes.Tests
             decimal cotacaoAtual = 70m;
 
             _cotadorAcoesServiceMock
-                .Setup(service => service.GetStockQuoteAsync(ticker))
+                .Setup(service => service.ObterCotacaoAsync(ticker))
                 .ReturnsAsync(cotacaoAtual);
 
             await _cotacaoManagerService.MonitorarCotacaoAsync(ticker, precoVendaReferencia, precoCompraReferencia);
 
-            _emailServiceMock.Verify(emailService => emailService.SendAlertEmail(
+            _emailServiceMock.Verify(emailService => emailService.EnviarEmailAlerta(
                 It.Is<string>(subject => subject.Contains("compra")),
                 It.Is<string>(body => body.Contains("compra"))
             ), Times.Once);
         }
 
         [Fact]
-        public async Task MonitorarCotacaoAsync_ShouldNotSendEmail_WhenCotacaoWithinBounds()
+        public async Task MonitorarCotacaoAsync_NaoEnviarEmail_CotacaoDentroDosLimites()
         {
             string ticker = "TEST";
             decimal precoVendaReferencia = 100m;
@@ -69,26 +69,26 @@ namespace CotadorAcoes.Tests
             decimal cotacaoAtual = 90m;
 
             _cotadorAcoesServiceMock
-                .Setup(service => service.GetStockQuoteAsync(ticker))
+                .Setup(service => service.ObterCotacaoAsync(ticker))
                 .ReturnsAsync(cotacaoAtual);
 
             await _cotacaoManagerService.MonitorarCotacaoAsync(ticker, precoVendaReferencia, precoCompraReferencia);
 
-            _emailServiceMock.Verify(emailService => emailService.SendAlertEmail(
+            _emailServiceMock.Verify(emailService => emailService.EnviarEmailAlerta(
                 It.IsAny<string>(),
                 It.IsAny<string>()
             ), Times.Never);
         }
 
         [Fact]
-        public async Task MonitorarCotacaoAsync_ShouldHandleException_WhenCotadorAcoesServiceThrows()
+        public async Task MonitorarCotacaoAsync_TratarExcecao_CotadorAcoesServiceLancarExcecao()
         {
             string ticker = "TEST";
             decimal precoVendaReferencia = 100m;
             decimal precoCompraReferencia = 80m;
 
             _cotadorAcoesServiceMock
-                .Setup(service => service.GetStockQuoteAsync(ticker))
+                .Setup(service => service.ObterCotacaoAsync(ticker))
                 .ThrowsAsync(new Exception("Erro de serviço"));
 
             Exception exception = await Record.ExceptionAsync(() => _cotacaoManagerService.MonitorarCotacaoAsync(ticker, precoVendaReferencia, precoCompraReferencia));

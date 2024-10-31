@@ -19,18 +19,18 @@ namespace CotadorAcoes.Application.Services
         {
             try
             {
-                decimal cotacaoAtual = await _cotadorAcoesService.GetStockQuoteAsync(ticker);
+                decimal cotacaoAtual = await _cotadorAcoesService.ObterCotacaoAsync(ticker);
                 Console.WriteLine($"Cotação atual do ativo {ticker}: {cotacaoAtual}");
 
                 if (cotacaoAtual > precoVendaReferencia)
                 {
-                    string emailBody = CreateEmailBody(ticker, cotacaoAtual, precoVendaReferencia, precoCompraReferencia, "venda");
-                    _emailService.SendAlertEmail($"Aconselhamento de venda para {ticker}", emailBody);
+                    string emailBody = CriarEmailCorpo(ticker, cotacaoAtual, precoVendaReferencia, precoCompraReferencia, "venda");
+                    _emailService.EnviarEmailAlerta($"Aconselhamento de venda para {ticker}", emailBody);
                 }
                 else if (cotacaoAtual < precoCompraReferencia)
                 {
-                    string emailBody = CreateEmailBody(ticker, cotacaoAtual, precoVendaReferencia, precoCompraReferencia, "compra");
-                    _emailService.SendAlertEmail($"Aconselhamento de compra para {ticker}", emailBody);
+                    string emailBody = CriarEmailCorpo(ticker, cotacaoAtual, precoVendaReferencia, precoCompraReferencia, "compra");
+                    _emailService.EnviarEmailAlerta($"Aconselhamento de compra para {ticker}", emailBody);
                 }
             }
             catch (Exception ex)
@@ -39,7 +39,7 @@ namespace CotadorAcoes.Application.Services
             }
         }
 
-        private string CreateEmailBody(string ativo, decimal cotacaoAtual, decimal precoVenda, decimal precoCompra, string tipoAlerta)
+        private string CriarEmailCorpo(string ativo, decimal cotacaoAtual, decimal precoVenda, decimal precoCompra, string tipoAlerta)
         {
             string tituloAlerta = tipoAlerta == "compra" ? "É hora de comprar" : "É hora de vender";
             string corTitulo = "#FFC107";

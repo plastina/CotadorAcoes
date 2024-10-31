@@ -15,7 +15,7 @@ namespace CotadorAcoes.Application.Services
             _config = config ?? throw new ArgumentNullException(nameof(config), "Configurações de e-mail não podem ser nulas.");
         }
 
-        public void SendAlertEmail(string subject, string body)
+        public void EnviarEmailAlerta(string subject, string body)
         {
             if (string.IsNullOrEmpty(_config.Smtp.Host) ||
                 string.IsNullOrEmpty(_config.Smtp.Usuario) ||

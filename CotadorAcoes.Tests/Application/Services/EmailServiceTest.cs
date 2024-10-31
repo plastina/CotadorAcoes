@@ -35,7 +35,7 @@ namespace CotadorAcoes.Tests
         }
 
         [Fact]
-        public void SendAlertEmail_ShouldThrowArgumentNullException_WhenConfigIsIncomplete()
+        public void EnviarEmailLancarExceptionConfigIncompleta()
         {
             AppSettings incompleteConfig = new AppSettings
             {
@@ -44,44 +44,44 @@ namespace CotadorAcoes.Tests
             };
             EmailService emailService = new EmailService(incompleteConfig);
 
-            Assert.Throws<ArgumentNullException>(() => emailService.SendAlertEmail("Subject", "Body"));
+            Assert.Throws<ArgumentNullException>(() => emailService.EnviarEmailAlerta("Subject", "Body"));
         }
 
         [Fact]
-        public async Task SendAlertEmail_ShouldSendEmail_WhenConfigIsValid()
+        public async Task EnviarEmailConfigValida()
         {
-            string subject = "Test Subject";
-            string body = "Test Body";
+            string asssunto = "Test Subject";
+            string corpo = "Test Body";
 
-            _emailServiceMock.Setup(service => service.SendAlertEmail(subject, body)).Verifiable();
+            _emailServiceMock.Setup(service => service.EnviarEmailAlerta(asssunto, corpo)).Verifiable();
 
-            _emailServiceMock.Object.SendAlertEmail(subject, body);
+            _emailServiceMock.Object.EnviarEmailAlerta(asssunto, corpo);
 
-            _emailServiceMock.Verify(service => service.SendAlertEmail(It.IsAny<string>(), It.IsAny<string>()), Times.Once);
+            _emailServiceMock.Verify(service => service.EnviarEmailAlerta(It.IsAny<string>(), It.IsAny<string>()), Times.Once);
 
             await Task.CompletedTask;
         }
 
         [Fact]
-        public void SendAlertEmail_ShouldHandleSmtpException_WhenThrown()
+        public void EnviarEmailAlertaSmtpException()
         {
-            _emailServiceMock.Setup(service => service.SendAlertEmail(It.IsAny<string>(), It.IsAny<string>()))
+            _emailServiceMock.Setup(service => service.EnviarEmailAlerta(It.IsAny<string>(), It.IsAny<string>()))
                 .Throws(new SmtpException("SMTP error"));
             EmailService emailService = new EmailService(_appSettings);
 
-            Exception exception = Record.Exception(() => emailService.SendAlertEmail("Test Subject", "Test Body"));
+            Exception exception = Record.Exception(() => emailService.EnviarEmailAlerta("Test Subject", "Test Body"));
 
             Assert.Null(exception); 
         }
 
         [Fact]
-        public void SendAlertEmail_ShouldHandleGeneralException_WhenThrown()
+        public void EnviarEmailAlertaExcecaoGenerica()
         {
-            _emailServiceMock.Setup(service => service.SendAlertEmail(It.IsAny<string>(), It.IsAny<string>()))
+            _emailServiceMock.Setup(service => service.EnviarEmailAlerta(It.IsAny<string>(), It.IsAny<string>()))
                 .Throws(new Exception("General error"));
             EmailService emailService = new EmailService(_appSettings);
 
-            Exception exception = Record.Exception(() => emailService.SendAlertEmail("Test Subject", "Test Body"));
+            Exception exception = Record.Exception(() => emailService.EnviarEmailAlerta("Test Subject", "Test Body"));
 
             Assert.Null(exception); 
         }

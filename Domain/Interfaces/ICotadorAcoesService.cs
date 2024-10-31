@@ -4,6 +4,6 @@ namespace CotadorAcoes.Domain.Interfaces
 {
     public interface ICotadorAcoesService
     {
-        Task<decimal> GetStockQuoteAsync(string ticker);
+        Task<decimal> ObterCotacaoAsync(string ticker);
     }
 }

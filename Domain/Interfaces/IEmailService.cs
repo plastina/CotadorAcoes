@@ -4,6 +4,6 @@ namespace CotadorAcoes.Domain.Interfaces
 {
     public interface IEmailService
     {
-        void SendAlertEmail(string subject, string body);
+        void EnviarEmailAlerta(string subject, string body);
     }
 }

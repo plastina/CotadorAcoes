@@ -38,7 +38,7 @@ namespace CotadorAcoes.Tests
         }
 
         [Fact]
-        public async Task GetStockQuoteAsync_ShouldReturnQuote_WhenResponseIsSuccessful()
+        public async Task ObterCotacaoAcaoSucesso()
         {
             string ticker = "AAPL";
             decimal expectedPrice = 150.25m;
@@ -57,13 +57,13 @@ namespace CotadorAcoes.Tests
                     Content = new StringContent(responseContent)
                 });
 
-            decimal actualPrice = await _cotadorAcoesService.GetStockQuoteAsync(ticker);
+            decimal actualPrice = await _cotadorAcoesService.ObterCotacaoAsync(ticker);
 
             Assert.Equal(expectedPrice, actualPrice);
         }
 
         [Fact]
-        public async Task GetStockQuoteAsync_ShouldThrowException_WhenResponseIsUnsuccessful()
+        public async Task ObterCotacaoAcaoSemSucesso()
         {
             string ticker = "AAPL";
             _httpMessageHandlerMock.Protected()
@@ -76,12 +76,12 @@ namespace CotadorAcoes.Tests
                     ReasonPhrase = "Not Found"
                 });
 
-            Exception exception = await Assert.ThrowsAsync<Exception>(() => _cotadorAcoesService.GetStockQuoteAsync(ticker));
+            Exception exception = await Assert.ThrowsAsync<Exception>(() => _cotadorAcoesService.ObterCotacaoAsync(ticker));
             Assert.Contains("Erro ao obter a cotação", exception.Message);
         }
 
         [Fact]
-        public async Task GetStockQuoteAsync_ShouldThrowException_WhenApiResponseIsInvalid()
+        public async Task ObterCotacaoAcaoRespostaApiInvalida()
         {
             string ticker = "AAPL";
             string responseContent = "{}"; 
@@ -96,18 +96,18 @@ namespace CotadorAcoes.Tests
                     Content = new StringContent(responseContent)
                 });
 
-            Exception exception = await Assert.ThrowsAsync<Exception>(() => _cotadorAcoesService.GetStockQuoteAsync(ticker));
+            Exception exception = await Assert.ThrowsAsync<Exception>(() => _cotadorAcoesService.ObterCotacaoAsync(ticker));
             Assert.Contains("Cotação não encontrada para o ativo", exception.Message);
         }
 
         [Fact]
-        public void Constructor_ShouldThrowArgumentNullException_WhenConfigIsNull()
+        public void ConstrutorLancamentoExceptionConfigNula()
         {
             Assert.Throws<ArgumentNullException>(() => new CotadorAcoesService(_httpClient, null));
         }
 
         [Fact]
-        public void Constructor_ShouldThrowArgumentException_WhenApiConfigIsIncomplete()
+        public void ConstrutorLancamentoExceptionConfigIncompleta()
         {
             AppSettings incompleteSettings = new AppSettings { Api = new ApiSettings { UrlPadrao = null, ApiKey = null } };
 
@@ -115,12 +115,12 @@ namespace CotadorAcoes.Tests
         }
 
         [Fact]
-        public async Task GetStockQuoteAsync_ShouldThrowException_WhenUrlIsInvalid()
+        public async Task ObterCotacaoAcaoExcecaoUrlInvalida()
         {
             string ticker = "AAPL";
             _appSettings.Api.UrlPadrao = "invalid-url";
 
-            Exception exception = await Assert.ThrowsAsync<Exception>(() => _cotadorAcoesService.GetStockQuoteAsync(ticker));
+            Exception exception = await Assert.ThrowsAsync<Exception>(() => _cotadorAcoesService.ObterCotacaoAsync(ticker));
             Assert.Contains("A URL formada é inválida", exception.Message);
         }
     }
