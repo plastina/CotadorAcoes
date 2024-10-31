@@ -1,13 +1,14 @@
 ﻿using CotadorAcoes.Configuration;
+using CotadorAcoes.Domain.Interfaces;
 using CotadorAcoes.Models;
 using Newtonsoft.Json;
 using System;
 using System.Net.Http;
 using System.Threading.Tasks;
 
-namespace CotadorAcoes.Services
+namespace CotadorAcoes.Application.Services
 {
-    public class CotadorAcoesService
+    public class CotadorAcoesService : ICotadorAcoesService
     {
         private readonly HttpClient _httpClient;
         private readonly AppSettings _config;

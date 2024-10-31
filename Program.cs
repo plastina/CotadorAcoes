@@ -1,6 +1,6 @@
-﻿using CotadorAcoes.Configuration;
-using CotadorAcoes.Managers;
-using CotadorAcoes.Services;
+﻿using CotadorAcoes.Application.Services;
+using CotadorAcoes.Configuration;
+using CotadorAcoes.Domain.Interfaces;
 using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
 using System;
@@ -42,8 +42,8 @@ internal class Program
 
         serviceCollection.AddSingleton<AppSettings>(sp => LoadAppSettings());
         serviceCollection.AddSingleton<HttpClient>();
-        serviceCollection.AddSingleton<CotadorAcoesService>();
-        serviceCollection.AddSingleton<EmailService>();
+        serviceCollection.AddSingleton<ICotadorAcoesService, CotadorAcoesService>();
+        serviceCollection.AddSingleton<IEmailService, EmailService>();
         serviceCollection.AddSingleton<CotacaoManagerService>();
 
         return serviceCollection.BuildServiceProvider();

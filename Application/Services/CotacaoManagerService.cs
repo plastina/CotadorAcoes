@@ -1,15 +1,15 @@
-﻿using CotadorAcoes.Services;
+﻿using CotadorAcoes.Domain.Interfaces;
 using System;
 using System.Threading.Tasks;
 
-namespace CotadorAcoes.Managers
+namespace CotadorAcoes.Application.Services
 {
-    public class CotacaoManagerService
+    public class CotacaoManagerService : ICotacaoManagerService
     {
-        private readonly CotadorAcoesService _cotadorAcoesService;
-        private readonly EmailService _emailService;
+        private readonly ICotadorAcoesService _cotadorAcoesService;
+        private readonly IEmailService _emailService;
 
-        public CotacaoManagerService(CotadorAcoesService cotadorAcoesService, EmailService emailService)
+        public CotacaoManagerService(ICotadorAcoesService cotadorAcoesService, IEmailService emailService)
         {
             _cotadorAcoesService = cotadorAcoesService ?? throw new ArgumentNullException(nameof(cotadorAcoesService));
             _emailService = emailService ?? throw new ArgumentNullException(nameof(emailService));
